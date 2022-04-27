@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>自定义连线</title>
+    <script src="./libs/china.geoJSON.js"></script>
+    <script src="./libs/echarts.min.js"></script>
+    <style>
+        #root {
+            width: 100vw;
+            height: 100vh;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="root"></div>
+    <script>
+
+        echarts.registerMap('china', chinaGeoJSON);
+
+        var mychart = echarts.init(document.getElementById("root"));
+
+        mychart.setOption({
+            geo: [{
+                map: 'china',
+                center: [107, 36],
+                zoom: 1.6,
+                itemStyle: {
+                    normal: {
+                        borderColor: '#5499d0'
+                    },
+                    emphasis: {
+                        areaColor: 'pink'
+                    }
+                },
+                label: {
+                    show: true
+                }
+            }],
+            series: [{
+                type: 'custom',
+                coordinateSystem: 'geo',
+                renderItem: function (params, api) {
+
+                    var beginPoint = api.coord([api.value(0), api.value(1)]);
+                    var endPoint = api.coord([api.value(2), api.value(3)]);
+
+                    return {
+                        type: "group",
+                        children: [{
+                            type: "line",
+                            shape: {
+                                x1: beginPoint[0],
+                                y1: beginPoint[1],
+                                x2: endPoint[0],
+                                y2: endPoint[1]
+                            }, style: api.style({
+                                stroke: "red",
+                                lineWidth: 2
+                            })
+                        }, {
+                            type: 'circle',
+                            shape: {
+                                cx: beginPoint[0],
+                                cy: beginPoint[1],
+                                r: 10
+                            },
+                            style: api.style({
+                                fill: "#ff0"
+                            })
+                        }, {
+                            type: 'circle',
+                            shape: {
+                                cx: endPoint[0],
+                                cy: endPoint[1],
+                                r: api.value(4)
+                            },
+                            style: api.style()
+                        }]
+                    };
+
+                },
+                data: [
+                    [116.46, 39.92, 104.065735, 30.659462, 13],
+                    [116.46, 39.92, 118.767413, 32.041544, 14],
+                    [116.46, 39.92, 121.509062, 25.044332, 9]
+                ]
+            }]
+        });
+
+    </script>
+
+</body>
+
+</html>

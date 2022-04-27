@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>自定义图形初步</title>
+    <script src="./libs/echarts.min.js"></script>
+    <style>
+        #root {
+            width: 100vw;
+            height: 100vh;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="root"></div>
+    <script>
+
+        var mychart = echarts.init(document.getElementById("root"));
+
+        mychart.setOption({
+            xAxis: {
+                data: [' 苹果', '香蕉', '火龙果']
+            },
+            yAxis: {},
+            series: [{
+                type: 'custom',
+                renderItem: function (params, api) {
+
+                    // api.value(0)和api.value(1) 记录着数据
+                    // api.coord把其转化成坐标
+                    var point = api.coord([api.value(0), api.value(1)])
+
+                    return {
+                        type: "circle",
+                        shape: {
+                            cx: point[0],
+                            cy: point[1],
+                            r: 50
+                        },
+
+                        // 返回值中样式的设置可以使用 api.style(...) 函数，
+                        // 能得到 series.itemStyle 中定义的样式信息，以及视觉映射的样式信息
+                        // 也可以用这种方式覆盖这些样式信息：api.style({fill: 'green', stroke: 'yellow'})
+                        style: api.style()
+                    };
+
+                },
+                data: [33, 22, 33]
+            }]
+        });
+
+    </script>
+
+</body>
+
+</html>

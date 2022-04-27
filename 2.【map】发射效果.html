@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>发射效果</title>
+    <script src="./libs/china.geoJSON.js"></script>
+    <script src="./libs/echarts.min.js"></script>
+    <style>
+        #root {
+            width: 100vw;
+            height: 100vh;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="root"></div>
+    <script>
+
+        echarts.registerMap('china', chinaGeoJSON);
+
+        var mychart = echarts.init(document.getElementById("root"));
+
+        mychart.setOption({
+            geo: [{
+                map: 'china',
+                center: [107, 36],
+                zoom: 1.6,
+                itemStyle: {
+                    normal: {
+                        borderColor: '#5499d0'
+                    },
+                    emphasis: {
+                        areaColor: 'pink'
+                    }
+                },
+                label: {
+                    show: true
+                }
+            }],
+            series: [{
+
+                // 曲线连接
+                type: 'lines',
+                zlevel: 1,
+                symbol: ['none'],
+                symbolSize: 10,
+                lineStyle: {
+                    normal: {
+                        color: "#dde86d",
+                        width: 5,
+                        curveness: 0.2
+                    }
+                },
+                effect: {
+                    show: true,
+                    period: 6,
+                    trailLength: 0,
+                    symbol: 'pin',
+                    symbolSize: 30,
+                    color: 'yellow'
+                },
+                data: [{
+                    coords: [[116.46, 39.92], [104.065735, 30.659462]]
+                }, {
+                    coords: [[116.46, 39.92], [118.767413, 32.041544]]
+                }, {
+                    coords: [[116.46, 39.92], [121.509062, 25.044332]]
+                }]
+            }, {
+
+                type: 'scatter',
+                coordinateSystem: 'geo',
+                zlevel: 2, // 相当于z-indexs
+                data: [{
+                    value: [116.46, 39.92, 10]
+                }, {
+                    value: [104.065735, 30.659462, 7]
+                }, {
+                    value: [118.767413, 32.041544, 12]
+                }, {
+                    value: [121.509062, 25.044332, 8]
+                }],
+                symbolSize: function (val) {
+                    return val[2] * 3;
+                },
+                itemStyle: {
+                    "normal": {
+                        "show": true,
+                        "color": "red",
+                        "shadowBlur": 30
+                    }
+                }
+
+            }]
+        });
+
+    </script>
+
+</body>
+
+</html>
