@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>基础配置</title>
+    <script src="./libs/echarts.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+        }
+
+        #root {
+            width: 100vw;
+            height: 100vh;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="root"></div>
+    <script>
+
+        var mychart = echarts.init(document.getElementById("root"));
+
+        mychart.setOption({
+            xAxis: {
+                type: 'category',
+                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [{
+                data: [120, 200, 150, 80, 70, 110, 130],
+                type: 'bar',
+                label: {
+                    show: true,
+                    formatter(data) {
+                        return "名称 : " + data.name + "\n价值 : " + data.value
+                    },
+                    align: 'left',
+                    lineHeight: 20,
+                    padding: [5, 5],
+                    color: 'white',
+
+                    // 你可以设置背景色
+                    // backgroundColor: "#1a3961",
+
+                    // 或者直接设置图片
+                    backgroundColor: {
+                        image: "./images/img1.png"
+                    },
+
+                    borderColor: '#aee9fb',
+                    borderWidth: 1,
+                    borderRadius: 6,
+                    width: 63,
+                    height: 41
+
+                }
+            }]
+        });
+
+    </script>
+
+</body>
+
+</html>
