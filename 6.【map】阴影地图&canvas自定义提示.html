@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>阴影地图&canvas自定义提示</title>
+    <script src="./libs/china.geoJSON.js"></script>
+    <script src="./libs/echarts.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+        }
+
+        #root {
+            width: 100vw;
+            height: 100vh;
+            background-color: #03428e;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="root"></div>
+    <script>
+
+        /**
+         * 先准备好label的图片，如果有多个可以准备多个
+         */
+
+        var canvas = document.createElement('canvas');
+        canvas.setAttribute('width', 130);
+        canvas.setAttribute('height', 50);
+
+        var painter = canvas.getContext('2d');
+
+        painter.fillStyle = '#0d1b6cbd';
+        painter.fillRect(0, 0, 130, 50);
+
+        painter.strokeStyle = '#b39f4b';
+
+        painter.beginPath();
+        painter.moveTo(3, 13);
+        painter.lineTo(3, 3);
+        painter.lineTo(13, 3);
+        painter.stroke();
+
+        painter.beginPath();
+        painter.moveTo(117, 3);
+        painter.lineTo(127, 3);
+        painter.lineTo(127, 13);
+        painter.stroke();
+
+        painter.beginPath();
+        painter.moveTo(3, 37);
+        painter.lineTo(3, 47);
+        painter.lineTo(13, 47);
+        painter.stroke();
+
+        painter.beginPath();
+        painter.moveTo(117, 47);
+        painter.lineTo(127, 47);
+        painter.lineTo(127, 37);
+        painter.stroke();
+
+        painter.font = "12px sans-serif";
+        painter.fillStyle = 'white';
+        painter.fillText("江苏省 统计数据", 20, 20);
+
+        painter.font = "10px sans-serif";
+        painter.fillText("¥23661 总记354吨", 20, 40);
+
+        /**
+         * 下面是echarts的部分
+        */
+
+        echarts.registerMap('china', chinaGeoJSON);
+
+        var mychart = echarts.init(document.getElementById("root"));
+
+        mychart.setOption({
+            geo: [{
+                map: 'china',
+                zlevel: 2,
+                label: {
+                    emphasis: {
+                        show: false
+                    }
+                },
+                center: [107, 36],
+                roam: false,
+                zoom: 1.2,
+                itemStyle: {
+                    normal: {
+                        areaColor: '#15268f',
+                        borderColor: '#2271ce'
+
+                    }
+                }
+            }],
+            series: [
+                {
+                    type: "map",
+                    map: "china",
+                    label: {
+                        emphasis: {
+                            show: false
+                        }
+                    },
+                    zlevel: 0,
+                    center: [107.5, 36.5],
+                    roam: false,
+                    zoom: 1.2,
+                    itemStyle: {
+                        normal: {
+                            areaColor: '#032281',
+                            borderColor: '#032281'
+                        }
+                    },
+                    regions: [{
+                        name: "南海诸岛",
+                        itemStyle: {
+                            normal: {
+                                opacity: 0
+                            }
+                        }
+                    }]
+                },
+
+
+                //  如果有多个地方，就搞多个
+                {
+                    type: 'lines',
+                    coordinateSystem: 'geo',
+                    zlevel: 3,
+                    symbolSize: [0, 0],
+                    opacity: 1,
+                    label: {
+                        show: true,
+                        backgroundColor: {
+                            image: canvas.toDataURL()
+                        },
+                        width: 130,
+                        height: 50,
+                        labelLayout: "center",
+                        verticalAlign: "bottom"
+                    },
+                    lineStyle: {
+                        width: 0,
+                        opacity: 1,
+                    },
+                    data: [
+                        {
+                            "coords": [[118.767413, 32.041544], [118.767413, 33.041544]]
+                        }
+                    ]
+                }
+
+            ]
+        });
+
+    </script>
+
+</body>
+
+</html>
